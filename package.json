@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/PGPetch-0/snomed-project#readme",
   "dependencies": {
-    "express": "^4.17.2"
+    "express": "^4.17.2",
+    "xlsx": "^0.18.0"
   }
 }
