@@ -8,9 +8,9 @@ const {
     getDiagnosisResult,
 } = require('../controllers/diagnosis')
 
-router.get('/symptoms', sendSymptoms)
-router.get('/keywords', getAllKeywords)
-router.post('/keywords', sendSelectedKeywords)
-router.get('/result', getDiagnosisResult)
+router.post('/send_symptoms', sendSymptoms)
+router.get('/get_all_keywords', getAllKeywords)
+router.post('/send_selected_keywords', sendSelectedKeywords)
+router.get('/get_diagnosis_result', getDiagnosisResult)
 
 module.exports = router
