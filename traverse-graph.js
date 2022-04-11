@@ -1,6 +1,7 @@
 const defaultdb = require('./models/defaultdb')
 
 defaultdb.query('SELECT * FROM Graph_Everything', (err, result) => {
+    // console.log(result)
     const allNodeDescription = {}
     const allDiagnosis = {}
     const allParent = {}
@@ -19,9 +20,12 @@ defaultdb.query('SELECT * FROM Graph_Everything', (err, result) => {
             allDiagnosis[row.Step_No].possible_diagnosis.push(row.Description)
         } else {
             if (allNodeDescription[row.Step_No] === undefined) {
-                allNodeDescription[row.Step_No] = []
+                allNodeDescription[row.Step_No] = {
+                    joinType: row.Join_Type,
+                    symptoms: []
+                }
             }
-            allNodeDescription[row.Step_No].push(row.Description)
+            allNodeDescription[row.Step_No].symptoms.push(row.Description)
         }
     }
 
@@ -33,5 +37,5 @@ defaultdb.query('SELECT * FROM Graph_Everything', (err, result) => {
         }
     }
 
-    console.log(allDiagnosis)
+    console.log(allNodeDescription)
 })
