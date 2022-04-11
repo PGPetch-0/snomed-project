@@ -4,42 +4,32 @@ defaultdb.query('SELECT * FROM Graph_Everything', (err, result) => {
     const allNodeDescription = {}
     const allDiagnosis = {}
     const allParent = {}
-    let currentStepNo = result[0].Step_No
-    for (let i = 0; i < result.length; i++) {
-        // console.log(result[i])
-        // if (currentStepNo !== result[i].Step_No && result[i].Yes_Path !== undefined) {
-        allParent[result[i].Yes_Path] = result[i].Step_No
-        allParent[result[i].No_Path] = result[i].Step_No
-        //     currentStepNo = result[i].Step_No
-        // }
-        if ('YN'.includes(result[i].Step_No[result[i].Step_No.length - 1])) {
-            if (allDiagnosis[result[i].Step_No] === undefined) {
-                allDiagnosis[result[i].Step_No] = {
+
+    for (const row of result) {
+        if (row.Yes_Path != row.Step_No) allParent[row.Yes_Path] = row.Step_No
+        if (row.No_Path != row.Step_No) allParent[row.No_Path] = row.Step_No
+
+        if ('YN'.includes(row.Step_No[row.Step_No.length - 1])) {
+            if (allDiagnosis[row.Step_No] === undefined) {
+                allDiagnosis[row.Step_No] = {
                     possible_diagnosis: [],
                     symptoms: []
                 }
             }
-            allDiagnosis[result[i].Step_No].possible_diagnosis.push(result[i].Description)
+            allDiagnosis[row.Step_No].possible_diagnosis.push(row.Description)
         } else {
-            if (allNodeDescription[result[i].Step_No] === undefined) {
-                allNodeDescription[result[i].Step_No] = []
+            if (allNodeDescription[row.Step_No] === undefined) {
+                allNodeDescription[row.Step_No] = []
             }
-            allNodeDescription[result[i].Step_No].push(result[i].Description)
+            allNodeDescription[row.Step_No].push(row.Description)
         }
     }
 
-    let i = 0
     for (const diagnosis of Object.keys(allDiagnosis)) {
-        i++
-        if (i > 20) break
-        console.log(diagnosis)
-        let currentNode = diagnosis
+        let currentNode = allParent[diagnosis]
         while (currentNode !== undefined) {
-            i++
-            if (i > 20) break
-            allDiagnosis[diagnosis].symptoms.push(allParent[currentNode])
+            allDiagnosis[diagnosis].symptoms.push(currentNode)
             currentNode = allParent[currentNode]
-            console.log(currentNode)
         }
     }
 
