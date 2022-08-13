@@ -28,12 +28,9 @@ const getAllKeywords = (req, res) => {
         }
         res.status(200).send({ success: true, keywords: keywords })
     })
-    // console.log(req.query)
-    // res.status(200).send({ success: true, keywords: mockDiagnosis.keywords })
 }
 
 const getDiagnosisResult = (req, res) => {
-    // res.status(200).send({ success: true, data: 'getDiagnosisResult' })
     // get resources for analysis
     defaultdb.query('SELECT * FROM Graph_Description', (err, result) => {
         if(err) console.log(err)
@@ -101,7 +98,7 @@ const getDiagnosisResult = (req, res) => {
                 if(!found) break
             }
         }
-
+        //query to get rows of the selected keywords
         function buildquery(arr){
             let ret_string = "SELECT DISTINCT D.Step_No, D.Description FROM Graph_Description as D" 
             + " INNER JOIN Graph_Desc_Snomed as S ON D.Auto_Number = S.Reference"
@@ -116,7 +113,6 @@ const getDiagnosisResult = (req, res) => {
         let query = buildquery(arr)
         defaultdb.query(query, arr,(err2, result2) => {
             if(err2) console.log(err2)
-            console.log(result2)
             //get "Yes", "No", or "Indecisive" for each node
             for(const step of Object.keys(allNodeDescription)){
                 switch(allNodeDescription[step].joinType){
@@ -218,6 +214,7 @@ const getDiagnosisResult = (req, res) => {
             // console.log(allDiagnosis)
             // console.log(allNodeDescription)
             // console.log(allParent)
+            // probability-sorting function
             function compare( a, b ) {
                 if ( a.probability < b.probability ){
                   return 1;
@@ -231,7 +228,6 @@ const getDiagnosisResult = (req, res) => {
             res.status(200).send({ success: true, diagnosis_result: response })
         })
     })
-    // res.status(200).send({ success: true, diagnosis_result: mockDiagnosis.diagnosisResult })
 }
 
 module.exports = {
